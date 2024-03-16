@@ -67,7 +67,8 @@ package ibex_pkg;
     OPCODE_BRANCH   = 7'h63,
     OPCODE_JALR     = 7'h67,
     OPCODE_JAL      = 7'h6f,
-    OPCODE_SYSTEM   = 7'h73
+    OPCODE_SYSTEM   = 7'h73,
+    OPCODE_IPM      = 7'h2B
   } opcode_e;
 
 
@@ -192,6 +193,11 @@ package ibex_pkg;
     MD_OP_REM
   } md_op_e;
 
+  typedef enum logic {
+    IPM_MUL,
+    IPM_SQUARE,
+    IPM_HOMOG
+  } ipm_op_e;
 
   //////////////////////////////////
   // Control and status registers //
