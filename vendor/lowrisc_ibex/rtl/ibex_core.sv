@@ -611,10 +611,10 @@ module ibex_core import ibex_pkg::*; #(
 
     .ipm_en_ex_o            (ipm_en_ex),
     .ipm_sel_ex_o           (ipm_sel_ex),
-    .ipmdiv_operator_ex_o   (ipm_operator_ex),
-    .ipmdiv_operand_a_ex_o  (ipm_operand_a_ex),
-    .ipmdiv_operand_b_ex_o  (ipm_operand_b_ex),
-    .ipmdiv_ready_id_o      (ipm_ready_id),
+    .ipm_operator_ex_o   (ipm_operator_ex),
+    .ipm_operand_a_ex_o  (ipm_operand_a_ex),
+    .ipm_operand_b_ex_o  (ipm_operand_b_ex),
+    .ipm_ready_id_o      (ipm_ready_id),
 
     // CSR ID/EX
     .csr_access_o         (csr_access),
