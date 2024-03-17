@@ -41,7 +41,7 @@ module ibex_ex_block #(
 
   // IPM
   input ibex_pkg::ipm_op_e      ipm_operator_i,
-  input logic                   ipm_operator_i, 
+  // input logic                   ipm_operator_i, 
   input logic                   ipm_en_i,
   input logic                   ipm_sel_i,
   input logic [31:0]            ipm_operand_a_i,
