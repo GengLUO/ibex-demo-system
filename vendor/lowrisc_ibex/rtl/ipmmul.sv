@@ -23,7 +23,6 @@ module ipmmul #(
     parameter int N = 4,
     localparam int WIDTH = N * 8
 ) (
-    input logic ipm_operator_i,
     input logic clk_i,
     input logic reset_ni,
     input logic [WIDTH - 1:0] a_i,
@@ -31,7 +30,7 @@ module ipmmul #(
     
     input logic ipm_en_i,  // dynamic enable signal, for FSM control
     input logic ipm_sel_i, // static decoder output, for data muxes
-    input logic operator_i, //Not used for now!!!!!!!!!!!!!
+    input ibex_pkg::ipm_op_e ipm_operator_i, //TODO:include other operations
     
     output logic [WIDTH - 1:0] result_o,
     output logic valid_o
