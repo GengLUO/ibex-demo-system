@@ -28,11 +28,10 @@ module ipmmul #(
     input logic reset_ni,
     input logic [WIDTH - 1:0] a_i,
     input logic [WIDTH - 1:0] b_i,
-//    input logic start,
     
     input logic ipm_en_i,  // dynamic enable signal, for FSM control
     input logic ipm_sel_i, // static decoder output, for data muxes
-//    input logic operator_i, ///////////////for now, ipmmul only
+    input logic operator_i, //Not used for now!!!!!!!!!!!!!
     
     output logic [WIDTH - 1:0] result_o,
     output logic valid_o
