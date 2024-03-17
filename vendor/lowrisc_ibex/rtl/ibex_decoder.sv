@@ -80,6 +80,11 @@ module ibex_decoder #(
   output ibex_pkg::md_op_e     multdiv_operator_o,
   output logic [1:0]           multdiv_signed_mode_o,
 
+  // IPM
+  output logic                ipm_en_o,
+  output logic                ipm_sel_o,
+  output ibex_pkg::ipm_op_e   ipm_operator_o,
+
   // CSRs
   output logic                 csr_access_o,          // access to CSR
   output ibex_pkg::csr_op_e    csr_op_o,              // operation to perform on CSR
@@ -210,6 +215,8 @@ module ibex_decoder #(
 
     multdiv_operator_o    = MD_OP_MULL;
     multdiv_signed_mode_o = 2'b00;
+
+    ipm_operator_o = IPM_OP_MUL;
 
     rf_wdata_sel_o        = RF_WD_EX;
     rf_we                 = 1'b0;
@@ -636,7 +643,26 @@ module ibex_decoder #(
 
           illegal_insn = csr_illegal;
         end
-
+      end
+      OPCODE_IPM : begin
+          rf_ren_a_o      = 1'b1;
+          rf_ren_b_o      = 1'b1;
+          rf_we           = 1'b1;
+          unique case (instr[14:12])
+            3'b000: begin
+              illegal_insn = 1'b0; //IPM_MUL
+              ipm_operator_o = IPM_OP_MUL;
+            end
+            3'b001: begin
+              illegal_insn = 1'b0; //IPM_MUL
+              ipm_operator_o = IPM_OP_HOMOG;
+            end
+            3'b010: begin
+              illegal_insn = 1'b0; //IPM_MUL
+              ipm_operator_o = IPM_OP_SQUARE;
+            end
+            default: illegal_insn = 1'b1;
+          endcase
       end
       default: begin
         illegal_insn = 1'b1;
@@ -686,6 +712,8 @@ module ibex_decoder #(
     alu_multicycle_o   = 1'b0;
     mult_sel_o         = 1'b0;
     div_sel_o          = 1'b0;
+
+    ipm_sel_o = 1'b0;
 
     unique case (opcode_alu)
 
@@ -1181,6 +1209,27 @@ module ibex_decoder #(
         end
 
       end
+
+      OPCODE_IPM : begin
+        alu_op_a_mux_sel_o = OP_A_REG_A;
+        alu_op_b_mux_sel_o = OP_B_REG_B;
+          unique case (instr[14:12])
+            3'b000: begin
+              alu_operator_o = ALU_ADD;
+              ipm_sel_o     = 1'b1;
+            end
+            3'b001: begin
+              alu_operator_o = ALU_ADD;
+              ipm_sel_o     = 1'b1;
+            end
+            3'b010: begin
+              alu_operator_o = ALU_ADD;
+              ipm_sel_o     = 1'b1;
+            end
+            default: ;
+          endcase
+      end
+
       default: ;
     endcase
   end
@@ -1188,6 +1237,8 @@ module ibex_decoder #(
   // do not enable multdiv in case of illegal instruction exceptions
   assign mult_en_o = illegal_insn ? 1'b0 : mult_sel_o;
   assign div_en_o  = illegal_insn ? 1'b0 : div_sel_o;
+
+  assign ipm_en_o = illegal_insn ? 1'b0 : ipm_sel_o;
 
   // make sure instructions accessing non-available registers in RV32E cause illegal
   // instruction exceptions
