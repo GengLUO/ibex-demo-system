@@ -196,7 +196,8 @@ package ibex_pkg;
   typedef enum logic [1:0] {
     IPM_OP_MUL,
     IPM_OP_SQUARE,
-    IPM_OP_HOMOG
+    IPM_OP_HOMOG,
+    IPM_OP_MASK
   } ipm_op_e;
 
   //////////////////////////////////
