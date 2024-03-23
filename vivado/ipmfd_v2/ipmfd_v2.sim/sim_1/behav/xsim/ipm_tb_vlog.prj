@@ -1,0 +1,13 @@
+# compile verilog/system verilog design source files
+sv xil_defaultlib  \
+"../../../../ipmfd_v2.srcs/sources_1/imports/new/gfmul.sv" \
+"../../../../ipmfd_v2.srcs/sources_1/new/ibex_pkg.sv" \
+"../../../../ipmfd_v2.srcs/sources_1/new/ipm.sv" \
+"../../../../ipmfd_v2.srcs/sources_1/new/sq.sv" \
+"../../../../ipmfd_v2.srcs/sim_1/new/ipm_tb.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
