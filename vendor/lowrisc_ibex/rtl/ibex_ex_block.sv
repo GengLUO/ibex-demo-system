@@ -205,7 +205,7 @@ module ibex_ex_block #(
   ////////////////
   // IPM Multiplier //
   ////////////////
-  ipmmul ipm_i (
+  ipm ipm_i (
         .clk_i(clk_i),
         .reset_ni(reset_ni),
         .ipm_operator_i(ipm_operator_i),
