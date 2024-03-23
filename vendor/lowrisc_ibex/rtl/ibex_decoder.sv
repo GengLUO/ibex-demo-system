@@ -118,6 +118,9 @@ module ibex_decoder #(
   logic [4:0] instr_rs3;
   logic [4:0] instr_rd;
 
+  logic [2:0] funct3；
+  assign funct3 = instr[14:12];
+
   logic        use_rs3_d;
   logic        use_rs3_q;
 
@@ -648,18 +651,22 @@ module ibex_decoder #(
           rf_ren_a_o      = 1'b1;
           rf_ren_b_o      = 1'b1;
           rf_we           = 1'b1;
-          unique case (instr[14:12])
+          unique case (funct3)
             3'b000: begin
               illegal_insn = 1'b0; //IPM_MUL
               ipm_operator_o = IPM_OP_MUL;
             end
             3'b001: begin
-              illegal_insn = 1'b0; //IPM_MUL
+              illegal_insn = 1'b0; //IPM_HOMOG
               ipm_operator_o = IPM_OP_HOMOG;
             end
             3'b010: begin
-              illegal_insn = 1'b0; //IPM_MUL
+              illegal_insn = 1'b0; //IPM_SQUARE
               ipm_operator_o = IPM_OP_SQUARE;
+            end
+            3'b111: begin
+              illegal_insn = 1'b0; //IPM_MASK
+              ipm_operator_o = IPM_OP_MASK;
             end
             default: illegal_insn = 1'b1;
           endcase
