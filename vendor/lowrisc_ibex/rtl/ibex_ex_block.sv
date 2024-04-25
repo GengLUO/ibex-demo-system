@@ -40,8 +40,7 @@ module ibex_ex_block #(
   input  logic                  data_ind_timing_i,
 
   // IPM
-  input ibex_pkg::ipm_op_e      ipm_operator_i,
-  // input logic                   ipm_operator_i, 
+  input ibex_pkg::ipm_op_e      ipm_operator_i, 
   input logic                   ipm_en_i,
   input logic                   ipm_sel_i,
   input logic [31:0]            ipm_operand_a_i,
@@ -207,7 +206,7 @@ module ibex_ex_block #(
   ////////////////
   ipm ipm_i (
         .clk_i(clk_i),
-        .reset_ni(reset_ni),
+        .rst_ni(rst_ni),
         .ipm_operator_i(ipm_operator_i),
         .a_i(ipm_operand_a_i),
         .b_i(ipm_operand_b_i),
