@@ -5,3 +5,5 @@ target/
 *.fst
 *.log
 *.csv
+
+ibexvenv/
