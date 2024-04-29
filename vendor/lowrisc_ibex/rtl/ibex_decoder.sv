@@ -118,7 +118,7 @@ module ibex_decoder #(
   logic [4:0] instr_rs3;
   logic [4:0] instr_rd;
 
-  logic [2:0] funct3；
+  logic [2:0] funct3;
   assign funct3 = instr[14:12];
 
   logic        use_rs3_d;
