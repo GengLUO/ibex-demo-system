@@ -664,6 +664,10 @@ module ibex_decoder #(
               illegal_insn = 1'b0; //IPM_SQUARE
               ipm_operator_o = IPM_OP_SQUARE;
             end
+            3'b011: begin
+              illegal_insn = 1'b0; //IPM_MULT_CONST
+              ipm_operator_o = IPM_OP_MUL_CONST;
+            end
             3'b100: begin
               illegal_insn = 1'b0; //IPM_UNMASK
               ipm_operator_o = IPM_OPUNMASK;
@@ -1234,6 +1238,10 @@ module ibex_decoder #(
               ipm_sel_o     = 1'b1;
             end
             3'b010: begin
+              alu_operator_o = ALU_ADD;
+              ipm_sel_o     = 1'b1;
+            end
+            3'b011: begin
               alu_operator_o = ALU_ADD;
               ipm_sel_o     = 1'b1;
             end
