@@ -293,6 +293,7 @@ module ibex_id_stage #(
   // IPM Control
   logic        ipm_en_id, ipm_en_dec;
   ipm_op_e     ipm_operator;
+  op_b_sel_e   ipm_op_b_mux_sel, ipm_op_b_mux_sel_dec;
 
   // Data Memory Control
   logic        lsu_we;
@@ -307,6 +308,8 @@ module ibex_id_stage #(
   logic [31:0] alu_operand_a;
   logic [31:0] alu_operand_b;
 
+  logic [31:0] ipm_operand_b;
+
   /////////////
   // LSU Mux //
   /////////////
@@ -315,6 +318,8 @@ module ibex_id_stage #(
   assign alu_op_a_mux_sel = lsu_addr_incr_req_i ? OP_A_FWD        : alu_op_a_mux_sel_dec;
   assign alu_op_b_mux_sel = lsu_addr_incr_req_i ? OP_B_IMM        : alu_op_b_mux_sel_dec;
   assign imm_b_mux_sel    = lsu_addr_incr_req_i ? IMM_B_INCR_ADDR : imm_b_mux_sel_dec;
+
+  assign ipm_op_b_mux_sel = lsu_addr_incr_req_i ? OP_B_IMM        : ipm_op_b_mux_sel_dec;
 
   ///////////////////
   // Operand MUXES //
@@ -406,6 +411,9 @@ module ibex_id_stage #(
 
   // ALU MUX for Operand B
   assign alu_operand_b = (alu_op_b_mux_sel == OP_B_IMM) ? imm_b : rf_rdata_b_fwd;
+
+  // IPM MUX for Operand B
+  assign ipm_operand_b = (ipm_op_b_mux_sel == OP_B_IMM) ? imm_b : rf_rdata_b_fwd;
 
   /////////////////////////////////////////
   // Multicycle Operation Stage Register //
@@ -510,6 +518,7 @@ module ibex_id_stage #(
     .ipm_en_o             (ipm_en_dec),
     .ipm_sel_o            (ipm_sel_ex_o),
     .ipm_operator_o       (ipm_operator),
+    .ipm_op_b_mux_sel_o   (ipm_op_b_mux_sel_dec),
 
     // CSRs
     .csr_access_o(csr_access_o),
@@ -703,7 +712,7 @@ module ibex_id_stage #(
   assign ipm_operator_ex_o        = ipm_operator;
 
   assign ipm_operand_a_ex_o     = rf_rdata_a_fwd;
-  assign ipm_operand_b_ex_o     = rf_rdata_b_fwd;
+  assign ipm_operand_b_ex_o     = ipm_operand_b;
 
   ////////////////////////
   // Branch set control //

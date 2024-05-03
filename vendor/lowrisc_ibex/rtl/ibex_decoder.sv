@@ -84,6 +84,8 @@ module ibex_decoder #(
   output logic                ipm_en_o,
   output logic                ipm_sel_o,
   output ibex_pkg::ipm_op_e   ipm_operator_o,
+  output ibex_pkg::op_b_sel_e ipm_op_b_mux_sel_o,    // operand b selection: reg value or
+                                                     // immediate
 
   // CSRs
   output logic                 csr_access_o,          // access to CSR
@@ -664,10 +666,10 @@ module ibex_decoder #(
               illegal_insn = 1'b0; //IPM_SQUARE
               ipm_operator_o = IPM_OP_SQUARE;
             end
-            3'b011: begin
-              illegal_insn = 1'b0; //IPM_MULT_CONST
-              ipm_operator_o = IPM_OP_MUL_CONST;
-            end
+            // 3'b011: begin
+            //   illegal_insn = 1'b0; //IPM_MULT_CONST
+            //   ipm_operator_o = IPM_OP_MUL_CONST;
+            // end
             3'b100: begin
               illegal_insn = 1'b0; //IPM_UNMASK
               ipm_operator_o = IPM_OPUNMASK;
@@ -679,6 +681,28 @@ module ibex_decoder #(
             default: illegal_insn = 1'b1;
           endcase
       end
+
+    OPCODE_IPM_IMM: begin // Register-Immediate ALU Operations
+        rf_ren_a_o       = 1'b1;
+        rf_we            = 1'b1;
+
+        unique case (instr[14:12])
+          3'b000: begin
+            illegal_insn = 1'b0;
+            ipm_operator_o = IPM_OP_MUL_CONST;
+          end
+          3'b001,
+          3'b010,
+          3'b011,
+          3'b100,
+          3'b101,
+          3'b110,
+          3'b111: illegal_insn = 1'b1;
+
+          default: illegal_insn = 1'b1;
+        endcase
+      end
+
       default: begin
         illegal_insn = 1'b1;
       end
@@ -713,6 +737,8 @@ module ibex_decoder #(
     alu_operator_o     = ALU_SLTU;
     alu_op_a_mux_sel_o = OP_A_IMM;
     alu_op_b_mux_sel_o = OP_B_IMM;
+    
+    ipm_op_b_mux_sel_o = OP_B_REG_B;
 
     imm_a_mux_sel_o    = IMM_A_ZERO;
     imm_b_mux_sel_o    = IMM_B_I;
@@ -1241,10 +1267,10 @@ module ibex_decoder #(
               alu_operator_o = ALU_ADD;
               ipm_sel_o     = 1'b1;
             end
-            3'b011: begin
-              alu_operator_o = ALU_ADD;
-              ipm_sel_o     = 1'b1;
-            end
+            // 3'b011: begin
+            //   alu_operator_o = ALU_ADD;
+            //   ipm_sel_o     = 1'b1;
+            // end
             3'b100: begin
               alu_operator_o = ALU_ADD;
               ipm_sel_o     = 1'b1;
@@ -1255,6 +1281,19 @@ module ibex_decoder #(
             end
             default: ;
           endcase
+      end
+
+      OPCODE_IPM_IMM: begin // Register-Immediate IPM Operations
+        ipm_op_b_mux_sel_o  = OP_B_IMM;
+        imm_b_mux_sel_o     = IMM_B_I;
+
+        unique case (instr_alu[14:12])
+          3'b000: begin
+            alu_operator_o = ALU_ADD;
+            ipm_sel_o     = 1'b1;
+          end
+          default: ;
+        endcase
       end
 
       default: ;

@@ -68,7 +68,8 @@ package ibex_pkg;
     OPCODE_JALR     = 7'h67,
     OPCODE_JAL      = 7'h6f,
     OPCODE_SYSTEM   = 7'h73,
-    OPCODE_IPM      = 7'h2B
+    OPCODE_IPM      = 7'h2B,
+    OPCODE_IPM_IMM  = 7'h0B
   } opcode_e;
 
 
