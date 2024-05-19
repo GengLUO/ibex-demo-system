@@ -200,7 +200,8 @@ package ibex_pkg;
     IPM_OP_HOMOG,
     IPM_OP_MASK,
     IPM_OP_UNMASK,
-    IPM_OP_MUL_CONST
+    IPM_OP_MUL_CONST，
+    IPM_OP_REFRESH
   } ipm_op_e;
 
   //////////////////////////////////
